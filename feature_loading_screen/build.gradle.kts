@@ -33,6 +33,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":repository_api"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -47,6 +49,7 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.compose.viewmodel)
     implementation(libs.koin.core)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.material)
