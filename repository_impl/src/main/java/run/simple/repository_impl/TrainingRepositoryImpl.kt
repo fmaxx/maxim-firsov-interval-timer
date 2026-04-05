@@ -1,5 +1,6 @@
 package run.simple.repository_impl
 
+import kotlinx.coroutines.delay
 import run.simple.repository_api.FetchTrainingResult
 import run.simple.repository_api.TrainingRepository
 import run.simple.repository_impl.api.TrainingApi
