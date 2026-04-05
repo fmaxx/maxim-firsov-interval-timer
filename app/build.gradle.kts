@@ -49,6 +49,7 @@ composeCompiler {
 
 dependencies {
     implementation(project(":feature_loading_screen"))
+    implementation(project(":feature_training_screen"))
     implementation(project(":repository_impl"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
