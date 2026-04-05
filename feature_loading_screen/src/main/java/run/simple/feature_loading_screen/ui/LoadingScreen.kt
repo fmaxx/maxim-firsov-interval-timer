@@ -137,6 +137,7 @@ private fun Content(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White
                 ),
+                isError = state.isError,
                 modifier = Modifier.fillMaxWidth()
             )
 
