@@ -10,7 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.NavDisplay
 import org.koin.android.ext.android.inject
-import run.simple.interval_timer.navigation.Navigator
+import run.simple.core.navigation.Navigator
 import run.simple.interval_timer.ui.theme.IntervalTimerTheme
 
 class MainActivity : ComponentActivity() {

@@ -48,6 +48,7 @@ composeCompiler {
 }
 
 dependencies {
+    implementation(project(":core"))
     implementation(project(":feature_loading_screen"))
     implementation(project(":feature_training_screen"))
     implementation(project(":repository_impl"))

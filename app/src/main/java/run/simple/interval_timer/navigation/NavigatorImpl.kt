@@ -2,24 +2,9 @@ package run.simple.interval_timer.navigation
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
-
-/**
- * Интерфейс для провайдинга конкретных экранов.
- * */
-fun interface EntryProvider {
-
-    fun get(key: NavKey): NavEntry<NavKey>
-}
-
-interface Navigator {
-
-    val entryProvider: EntryProvider
-    val backStack: SnapshotStateList<NavKey>
-    fun goTo(destination: NavKey): Boolean
-    fun goBack(): Boolean
-}
+import run.simple.core.navigation.EntryProvider
+import run.simple.core.navigation.Navigator
 
 class NavigatorImpl(
     startDestination: NavKey,

@@ -9,12 +9,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import run.simple.core.navigation.Navigator
+import run.simple.core.navigation.TrainingRoute
 import run.simple.repository_api.FetchTrainingResult
 import run.simple.repository_api.TrainingRepository
 import timber.log.Timber
 
 class LoadingViewModel(
     private val trainingRepository: TrainingRepository,
+    private val navigator: Navigator,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoadingUiState())
@@ -49,7 +52,7 @@ class LoadingViewModel(
                 is FetchTrainingResult.Success -> {
                     Timber.d("success: ${result.response}")
                     _uiState.update { it.copy(isLoading = false, isError = false) }
-                    // _effect.send(LoadingUiEffect.NavigateNext)
+                    navigator.goTo(TrainingRoute(result.response))
                 }
 
                 is FetchTrainingResult.Fail -> {

@@ -33,6 +33,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
     implementation(project(":repository_api"))
 
     implementation(libs.androidx.core.ktx)
