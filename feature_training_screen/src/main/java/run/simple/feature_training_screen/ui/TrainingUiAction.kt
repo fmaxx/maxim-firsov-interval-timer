@@ -4,4 +4,6 @@ sealed interface TrainingUiAction {
     data object OnStartClick : TrainingUiAction
     data object OnPauseClick : TrainingUiAction
     data object OnResetClick : TrainingUiAction
+    data object OnResumeClick : TrainingUiAction
+    data object OnNewClick : TrainingUiAction
 }

@@ -1,4 +1,4 @@
-package run.simple.feature_training_screen.ui.components.intervalList
+package run.simple.feature_training_screen.ui.components.interval
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,28 +10,24 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import run.simple.core.theme.DemoColors
+import run.simple.feature_training_screen.ui.IntervalsViewState
 import run.simple.feature_training_screen.ui.components.intervalItem.IntervalItemState
 import run.simple.feature_training_screen.ui.components.intervalItem.IntervalItemView
 import run.simple.feature_training_screen.ui.components.intervalItem.TrainingState
 
-@Immutable
-data class IntervalListState(
-    val items: ImmutableList<IntervalItemState>,
-    val progress: String,
-)
-
 @Composable
-fun IntervalList(state: IntervalListState) {
+fun IntervalsView(
+    state: IntervalsViewState,
+    modifier: Modifier = Modifier,
+) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(all = 16.dp),
+        modifier = modifier.fillMaxWidth(),
     ) {
         Row(
             modifier = Modifier
@@ -62,10 +58,10 @@ fun IntervalList(state: IntervalListState) {
 
 @Preview(showBackground = true, backgroundColor = 0xFFF5F5F5, widthDp = 360)
 @Composable
-private fun IntervalItemViewPreview() {
+private fun IntervalsItemViewPreview() {
     MaterialTheme {
-        IntervalList(
-            state = IntervalListState(
+        IntervalsView(
+            state = IntervalsViewState(
                 items = persistentListOf(
                     IntervalItemState(
                         trainingState = TrainingState.Idle,

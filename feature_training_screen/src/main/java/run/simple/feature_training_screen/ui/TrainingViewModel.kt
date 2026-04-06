@@ -32,6 +32,15 @@ class TrainingViewModel(
     }
 
     fun onAction(action: TrainingUiAction) {
+        when(action){
+            TrainingUiAction.OnNewClick -> {
+
+            }
+            TrainingUiAction.OnPauseClick -> TODO()
+            TrainingUiAction.OnResetClick -> TODO()
+            TrainingUiAction.OnResumeClick -> TODO()
+            TrainingUiAction.OnStartClick -> TODO()
+        }
         /* when (action) {
              TrainingUiAction.OnStartClick -> _uiState.update {
                  it.copy(isRunning = true)

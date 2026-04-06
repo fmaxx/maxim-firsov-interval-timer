@@ -1,8 +1,10 @@
 package run.simple.feature_training_screen.ui
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -19,21 +21,29 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.referentialEqualityPolicy
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import run.simple.core.navigation.TrainingRoute
 import run.simple.core.theme.DemoColors
+import run.simple.feature_training_screen.ui.components.buttons.ButtonsState
+import run.simple.feature_training_screen.ui.components.buttons.ButtonsView
+import run.simple.feature_training_screen.ui.components.interval.IntervalsView
+import run.simple.feature_training_screen.ui.components.intervalItem.IntervalItemState
 import run.simple.feature_training_screen.ui.components.intervalItem.TrainingState
+import run.simple.feature_training_screen.ui.components.trainingCard.TrainingCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,54 +111,52 @@ private fun Content(
             )
         },
     ) { paddingValues ->
-        Column(
+        ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+                .background(Color.White)
+                .padding(paddingValues),
         ) {
-            /*Text(
-                text = state.title.ifEmpty { "Тренировка" },
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
+
+            val (
+                buttonsBox,
+                trainingCard,
+                intervalsView,
+            ) = createRefs()
+
+            // CARD
+            TrainingCard(
+                state = state.trainingCardState,
+                modifier = Modifier
+                    .padding(all = 16.dp)
+                    .constrainAs(trainingCard) {
+                        top.linkTo(parent.top)
+                    }
             )
-            Spacer(Modifier.height(16.dp))
-            Text(
-                text = state.currentIntervalTitle.ifEmpty { "—" },
-                fontSize = 18.sp,
+
+            IntervalsView(
+                state = state.intervalsViewState,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .background(Color.Red)
+                    .constrainAs(intervalsView) {
+                        top.linkTo(trainingCard.bottom)
+                        bottom.linkTo(parent.bottom)
+                        height = Dimension.fillToConstraints
+                    }
             )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = "${state.currentIntervalTimeLeft} s",
-                fontSize = 48.sp,
-                fontWeight = FontWeight.Bold,
-            )
-            Spacer(Modifier.height(32.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+
+            // BUTTONS
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = 16.dp)
+                    .constrainAs(buttonsBox) {
+                        bottom.linkTo(parent.bottom)
+                    }
             ) {
-                Button(
-                    onClick = {
-                        if (state.isRunning) {
-                            onAction(TrainingUiAction.OnPauseClick)
-                        } else {
-                            onAction(TrainingUiAction.OnStartClick)
-                        }
-                    },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text(if (state.isRunning) "Пауза" else "Старт")
-                }
-                Button(
-                    onClick = { onAction(TrainingUiAction.OnResetClick) },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text("Сброс")
-                }
-            }*/
+                ButtonsView(state.buttonsState)
+            }
         }
     }
 }
@@ -179,7 +187,7 @@ private fun EffectHandler(effectFlow: Flow<TrainingUiEffect>) {
     }
 }
 
-@Preview
+/*@Preview
 @Composable
 private fun IdlePreview() {
     Content(
@@ -188,10 +196,13 @@ private fun IdlePreview() {
                 trainingState = TrainingState.Idle,
                 totaLeftTime = "15:00",
                 title = "Tренировка 7",
+            ),
+            buttonsState = ButtonsState(
+                trainingState = TrainingState.Idle
             )
         ),
     )
-}
+}*/
 
 @Preview
 @Composable
@@ -202,12 +213,75 @@ private fun RunningPreview() {
                 trainingState = TrainingState.Running(0.5f),
                 totaLeftTime = "● 12:18",
                 title = "Tренировка 7",
+            ),
+            buttonsState = ButtonsState(
+                trainingState = TrainingState.Running(0.5f)
+            ),
+            trainingCardState = TrainingCardState(
+                trainingState = TrainingState.Running(0.5f),
+                status = "ВЫПОЛНЯЕТСЯ",
+                trainingName = "Медленный бег",
+                currentTimeLeft = "00:18",
+                totalProgressMessage = "Прошло 12:18 из 15:00"
+            ),
+            intervalsViewState = IntervalsViewState(
+                items = persistentListOf(
+                    IntervalItemState(
+                        trainingState = TrainingState.Idle,
+                        order = "1",
+                        title = "Ходьба в среднем темпе",
+                        left = "5:00"
+                    ),
+
+                    IntervalItemState(
+                        trainingState = TrainingState.Idle,
+                        order = "2",
+                        title = "Ходьба в среднем темпе",
+                        left = "5:00"
+                    ),
+
+                    IntervalItemState(
+                        trainingState = TrainingState.Idle,
+                        order = "3",
+                        title = "Ходьба в среднем темпе",
+                        left = "5:00"
+                    ),
+
+                    IntervalItemState(
+                        trainingState = TrainingState.Running(0.5f),
+                        order = "5",
+                        title = "Ходьба в среднем темпе",
+                        left = "5:00"
+                    ),
+
+                    IntervalItemState(
+                        trainingState = TrainingState.Idle,
+                        order = "6",
+                        title = "Ходьба в среднем темпе",
+                        left = "5:00"
+                    ),
+
+                    IntervalItemState(
+                        trainingState = TrainingState.Pause(0.75f),
+                        order = "7",
+                        title = "Ходьба в среднем темпе",
+                        left = "5:00"
+                    ),
+
+                    IntervalItemState(
+                        trainingState = TrainingState.Completed,
+                        order = "8",
+                        title = "Ходьба в среднем темпе",
+                        left = "5:00"
+                    ),
+                ),
+                progress = "7 из 7 ✓"
             )
         ),
     )
 }
 
-@Preview
+/*@Preview
 @Composable
 private fun PausePreview() {
     Content(
@@ -216,6 +290,9 @@ private fun PausePreview() {
                 trainingState = TrainingState.Pause(0.5f),
                 totaLeftTime = "❚❚ Пауза",
                 title = "Tренировка 7",
+            ),
+            buttonsState = ButtonsState(
+                trainingState = TrainingState.Pause(0.5f)
             )
         ),
     )
@@ -230,7 +307,10 @@ private fun CompletePreview() {
                 trainingState = TrainingState.Completed,
                 totaLeftTime = "Завершена",
                 title = "Tренировка 7",
+            ),
+            buttonsState = ButtonsState(
+                trainingState = TrainingState.Completed
             )
         ),
     )
-}
+}*/

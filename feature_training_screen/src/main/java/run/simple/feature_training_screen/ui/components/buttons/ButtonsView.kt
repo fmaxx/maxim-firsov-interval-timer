@@ -34,19 +34,29 @@ import run.simple.core.theme.DemoColors.BorderGray
 import run.simple.core.theme.DemoColors.Green500
 import run.simple.core.theme.DemoColors.Orange
 import run.simple.core.theme.DemoColors.RedError
+import run.simple.feature_training_screen.ui.TrainingUiAction
 import run.simple.feature_training_screen.ui.components.intervalItem.TrainingState
 
 @Immutable
 data class ButtonsState(
     val trainingState: TrainingState,
-)
+) {
+
+    companion object {
+
+        val default = ButtonsState(trainingState = TrainingState.Idle)
+    }
+}
 
 @Composable
-fun ButtonsView(state: ButtonsState) {
+fun ButtonsView(
+    state: ButtonsState,
+    onAction: (TrainingUiAction) -> Unit = {},
+) {
     when (state.trainingState) {
         TrainingState.Idle -> {
             PlayButton {
-                // TODO
+                onAction.invoke(TrainingUiAction.OnStartClick)
             }
         }
 
@@ -54,15 +64,14 @@ fun ButtonsView(state: ButtonsState) {
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-
                 PauseButton {
-
+                    onAction.invoke(TrainingUiAction.OnPauseClick)
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 ResetTrainingButton {
-
+                    onAction.invoke(TrainingUiAction.OnResetClick)
                 }
             }
         }
@@ -71,15 +80,14 @@ fun ButtonsView(state: ButtonsState) {
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-
                 ResumeButton {
-
+                    onAction.invoke(TrainingUiAction.OnResumeClick)
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 ResetTrainingButton {
-
+                    onAction.invoke(TrainingUiAction.OnResetClick)
                 }
             }
         }
@@ -88,15 +96,14 @@ fun ButtonsView(state: ButtonsState) {
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-
                 RestartButton {
-
+                    onAction.invoke(TrainingUiAction.OnResetClick)
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 NewTrainingButton {
-
+                    onAction.invoke(TrainingUiAction.OnNewClick)
                 }
             }
         }
