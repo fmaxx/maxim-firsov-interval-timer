@@ -7,5 +7,5 @@ import run.simple.feature_training_screen.ui.TrainingScreen
 
 fun EntryProviderScope<NavKey>.featureTrainingScreenNavigation() =
     entry<TrainingRoute> {
-        TrainingScreen()
+        TrainingScreen(route = it)
     }

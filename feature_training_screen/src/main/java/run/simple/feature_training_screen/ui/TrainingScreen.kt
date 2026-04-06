@@ -31,15 +31,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import run.simple.core.navigation.TrainingRoute
 import run.simple.core.theme.DemoColors
 import run.simple.feature_training_screen.ui.components.intervalItem.TrainingState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrainingScreen(
+    route: TrainingRoute,
     viewModel: TrainingViewModel = koinViewModel(),
     onBackClick: () -> Unit = {},
 ) {
+    LaunchedEffect(route) {
+        viewModel.setData(route.data)
+    }
+
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     Content(
         state = state,
@@ -61,7 +67,7 @@ private fun Content(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = state.title,
+                        text = state.topBarState.title,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 18.sp,
                         color = DemoColors.Black,
@@ -76,7 +82,7 @@ private fun Content(
                     }
                 },
                 actions = {
-                    val color = when (state.trainingState) {
+                    val color = when (state.topBarState.trainingState) {
                         TrainingState.Idle -> DemoColors.TextGray
                         is TrainingState.Running -> DemoColors.Green500
                         is TrainingState.Pause -> DemoColors.Orange
@@ -84,7 +90,7 @@ private fun Content(
                     }
 
                     Text(
-                        text = state.totaLeftTime,
+                        text = state.topBarState.totaLeftTime,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 18.sp,
                         color = color
@@ -178,12 +184,11 @@ private fun EffectHandler(effectFlow: Flow<TrainingUiEffect>) {
 private fun IdlePreview() {
     Content(
         state = TrainingUiState(
-            trainingState = TrainingState.Idle,
-            totaLeftTime = "15:00",
-            title = "Tренировка 7",
-            currentIntervalTitle = "Бег",
-            currentIntervalTimeLeft = 42,
-            isRunning = true,
+            topBarState = TopbarState(
+                trainingState = TrainingState.Idle,
+                totaLeftTime = "15:00",
+                title = "Tренировка 7",
+            )
         ),
     )
 }
@@ -193,12 +198,11 @@ private fun IdlePreview() {
 private fun RunningPreview() {
     Content(
         state = TrainingUiState(
-            trainingState = TrainingState.Running(0.5f),
-            totaLeftTime = "● 12:18",
-            title = "Tренировка 7",
-            currentIntervalTitle = "Бег",
-            currentIntervalTimeLeft = 42,
-            isRunning = true,
+            topBarState = TopbarState(
+                trainingState = TrainingState.Running(0.5f),
+                totaLeftTime = "● 12:18",
+                title = "Tренировка 7",
+            )
         ),
     )
 }
@@ -208,12 +212,11 @@ private fun RunningPreview() {
 private fun PausePreview() {
     Content(
         state = TrainingUiState(
-            trainingState = TrainingState.Pause(0.5f),
-            totaLeftTime = "❚❚ Пауза",
-            title = "Tренировка 7",
-            currentIntervalTitle = "Бег",
-            currentIntervalTimeLeft = 42,
-            isRunning = true,
+            topBarState = TopbarState(
+                trainingState = TrainingState.Pause(0.5f),
+                totaLeftTime = "❚❚ Пауза",
+                title = "Tренировка 7",
+            )
         ),
     )
 }
@@ -223,12 +226,11 @@ private fun PausePreview() {
 private fun CompletePreview() {
     Content(
         state = TrainingUiState(
-            trainingState = TrainingState.Completed,
-            totaLeftTime = "Завершена",
-            title = "Tренировка 7",
-            currentIntervalTitle = "Бег",
-            currentIntervalTimeLeft = 42,
-            isRunning = true,
+            topBarState = TopbarState(
+                trainingState = TrainingState.Completed,
+                totaLeftTime = "Завершена",
+                title = "Tренировка 7",
+            )
         ),
     )
 }

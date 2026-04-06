@@ -3,7 +3,7 @@ package run.simple.repository_impl.api
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
-import run.simple.repository_api.data.TimerResponse
+import run.simple.repository_api.data.TrainingResponse
 
 interface TrainingApi {
 
@@ -12,5 +12,5 @@ interface TrainingApi {
         "Authorization: Bearer test-token"
     )
     @GET("interval-timers/{id}")
-    suspend fun fetchTraining(@Path("id") id: Int): TimerResponse
+    suspend fun fetchTraining(@Path("id") id: Int): TrainingResponse
 }

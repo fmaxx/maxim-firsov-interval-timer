@@ -5,13 +5,33 @@ import run.simple.feature_training_screen.ui.components.intervalItem.TrainingSta
 
 @Immutable
 data class TrainingUiState(
+    val topBarState: TopbarState,
+) {
+
+    companion object {
+
+        val default = TrainingUiState(
+            topBarState = TopbarState.default
+        )
+    }
+}
+
+@Immutable
+data class TopbarState(
     val title: String = "",
     val totaLeftTime: String = "00:00",
-    val currentIntervalTitle: String = "",
-    val currentIntervalTimeLeft: Int = 0,
-    val isRunning: Boolean = false,
     val trainingState: TrainingState = TrainingState.Idle,
-)
+) {
+
+    companion object {
+
+        val default = TopbarState(
+            title = "",
+            totaLeftTime = "",
+            trainingState = TrainingState.Idle,
+        )
+    }
+}
 
 @Immutable
 data class TrainingCardState(
@@ -29,11 +49,31 @@ data class TrainingCardState(
             is TrainingState.Pause -> trainingState.progress
             is TrainingState.Running -> trainingState.progress
         }
+
+    companion object {
+
+        val default = TrainingCardState(
+            trainingState = TrainingState.Idle,
+            status = "",
+            trainingName = "",
+            currentTimeLeft = "",
+            totalProgressMessage = "",
+        )
+    }
 }
 
 @Immutable
 data class StatsViewState(
     val totalTime: String,
     val totalIntervals: Int,
-)
+) {
+
+    companion object {
+
+        val default: StatsViewState = StatsViewState(
+            totalTime = "",
+            totalIntervals = 0,
+        )
+    }
+}
 

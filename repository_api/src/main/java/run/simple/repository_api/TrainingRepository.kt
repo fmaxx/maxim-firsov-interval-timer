@@ -1,6 +1,6 @@
 package run.simple.repository_api
 
-import run.simple.repository_api.data.TimerResponse
+import run.simple.repository_api.data.TrainingResponse
 
 interface TrainingRepository {
 
@@ -8,6 +8,6 @@ interface TrainingRepository {
 }
 
 sealed interface FetchTrainingResult {
-    data class Success(val response: TimerResponse) : FetchTrainingResult
+    data class Success(val response: TrainingResponse) : FetchTrainingResult
     data class Fail(val throwable: Throwable) : FetchTrainingResult
 }
