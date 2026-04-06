@@ -14,6 +14,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -107,14 +109,18 @@ private fun Content(
                     )
 
                 },
-                modifier = Modifier.padding(horizontal = 16.dp)
+                colors = TopAppBarDefaults.topAppBarColors().copy(
+                    containerColor = DemoColors.GrayBackground
+                ),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
             )
         },
     ) { paddingValues ->
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(DemoColors.GrayBackground)
                 .padding(paddingValues),
         ) {
 
@@ -138,10 +144,10 @@ private fun Content(
                 state = state.intervalsViewState,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
-                    .background(Color.Red)
+                    .padding(top = 16.dp, bottom = 8.dp)
                     .constrainAs(intervalsView) {
                         top.linkTo(trainingCard.bottom)
-                        bottom.linkTo(parent.bottom)
+                        bottom.linkTo(buttonsBox.top)
                         height = Dimension.fillToConstraints
                     }
             )
@@ -150,7 +156,8 @@ private fun Content(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(all = 16.dp)
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp)
                     .constrainAs(buttonsBox) {
                         bottom.linkTo(parent.bottom)
                     }

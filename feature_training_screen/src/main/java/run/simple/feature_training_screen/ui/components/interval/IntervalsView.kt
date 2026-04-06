@@ -49,7 +49,10 @@ fun IntervalsView(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            itemsIndexed(state.items, key = { index, _ -> index }) { _, item ->
+            itemsIndexed(
+                items = state.items,
+                key = { _, item -> item.order }
+            ) { _, item ->
                 IntervalItemView(state = item)
             }
         }
