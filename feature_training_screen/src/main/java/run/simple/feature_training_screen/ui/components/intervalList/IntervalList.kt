@@ -31,7 +31,7 @@ data class IntervalListState(
 @Composable
 fun IntervalList(state: IntervalListState) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(all = 16.dp),
     ) {
         Row(
             modifier = Modifier

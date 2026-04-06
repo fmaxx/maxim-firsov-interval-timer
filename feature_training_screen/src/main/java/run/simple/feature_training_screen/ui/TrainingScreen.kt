@@ -8,13 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -62,20 +64,27 @@ private fun Content(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = state.title.ifEmpty { "Тренировка" },
+                        text = state.title,
                         fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp
                     )
                 },
                 navigationIcon = {
-                    TextButton(onClick = onBackClick) {
-                        Text(text = "<", style = MaterialTheme.typography.titleLarge)
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Назад",
+                        )
                     }
                 },
                 actions = {
-                    TextButton(onClick = { onAction(TrainingUiAction.OnResetClick) }) {
-                        Text(text = "Пропустить")
-                    }
+                    Text(
+                        text = state.totalTime,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp,
+                    )
                 },
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         },
     ) { paddingValues ->
@@ -87,7 +96,7 @@ private fun Content(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(
+            /*Text(
                 text = state.title.ifEmpty { "Тренировка" },
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -126,7 +135,7 @@ private fun Content(
                 ) {
                     Text("Сброс")
                 }
-            }
+            }*/
         }
     }
 }

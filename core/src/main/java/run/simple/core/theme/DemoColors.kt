@@ -12,4 +12,6 @@ object DemoColors {
     val OrangeFill = Color(0xFFFBE9D7)
     val Black = Color(0xFF1A1D24)
     val GrayBackground = Color(0xFFF5F5F7)
+    val Blue = Color(0xFF3B82F6)
+    val RedError = Color(0xFFDC3545)
 }
