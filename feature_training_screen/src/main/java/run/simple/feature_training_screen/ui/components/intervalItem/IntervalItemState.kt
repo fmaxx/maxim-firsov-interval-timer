@@ -1,6 +1,6 @@
-package run.simple.feature_training_screen.ui.components.interval
+package run.simple.feature_training_screen.ui.components.intervalItem
 
-data class IntervalWidgetState(
+data class IntervalItemState(
     val trainingState: TrainingState,
     val order: String,
     val title: String,

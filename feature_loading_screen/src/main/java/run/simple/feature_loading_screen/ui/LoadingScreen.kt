@@ -47,7 +47,7 @@ import run.simple.feature_loading_screen.ui.components.LoadButton
 import run.simple.feature_loading_screen.ui.components.LoadButtonState
 
 private val Green500 = Color(0xFF4CAF50)
-private val GrayBackground = Color(0xFFF5F5F7)
+val GrayBackground = Color(0xFFF5F5F7)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
