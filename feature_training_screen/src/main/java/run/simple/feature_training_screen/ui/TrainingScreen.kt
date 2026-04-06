@@ -2,15 +2,10 @@ package run.simple.feature_training_screen.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,6 +31,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import run.simple.core.theme.DemoColors
+import run.simple.feature_training_screen.ui.components.intervalItem.TrainingState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +63,8 @@ private fun Content(
                     Text(
                         text = state.title,
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        color = DemoColors.Black,
                     )
                 },
                 navigationIcon = {
@@ -78,11 +76,20 @@ private fun Content(
                     }
                 },
                 actions = {
+                    val color = when (state.trainingState) {
+                        TrainingState.Idle -> DemoColors.TextGray
+                        is TrainingState.Running -> DemoColors.Green500
+                        is TrainingState.Pause -> DemoColors.Orange
+                        TrainingState.Completed -> DemoColors.Blue
+                    }
+
                     Text(
-                        text = state.totalTime,
+                        text = state.totaLeftTime,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 18.sp,
+                        color = color
                     )
+
                 },
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
@@ -168,10 +175,57 @@ private fun EffectHandler(effectFlow: Flow<TrainingUiEffect>) {
 
 @Preview
 @Composable
-private fun TrainingScreenPreview() {
+private fun IdlePreview() {
     Content(
         state = TrainingUiState(
-            title = "Утренняя разминка",
+            trainingState = TrainingState.Idle,
+            totaLeftTime = "15:00",
+            title = "Tренировка 7",
+            currentIntervalTitle = "Бег",
+            currentIntervalTimeLeft = 42,
+            isRunning = true,
+        ),
+    )
+}
+
+@Preview
+@Composable
+private fun RunningPreview() {
+    Content(
+        state = TrainingUiState(
+            trainingState = TrainingState.Running(0.5f),
+            totaLeftTime = "● 12:18",
+            title = "Tренировка 7",
+            currentIntervalTitle = "Бег",
+            currentIntervalTimeLeft = 42,
+            isRunning = true,
+        ),
+    )
+}
+
+@Preview
+@Composable
+private fun PausePreview() {
+    Content(
+        state = TrainingUiState(
+            trainingState = TrainingState.Pause(0.5f),
+            totaLeftTime = "❚❚ Пауза",
+            title = "Tренировка 7",
+            currentIntervalTitle = "Бег",
+            currentIntervalTimeLeft = 42,
+            isRunning = true,
+        ),
+    )
+}
+
+@Preview
+@Composable
+private fun CompletePreview() {
+    Content(
+        state = TrainingUiState(
+            trainingState = TrainingState.Completed,
+            totaLeftTime = "Завершена",
+            title = "Tренировка 7",
             currentIntervalTitle = "Бег",
             currentIntervalTimeLeft = 42,
             isRunning = true,
