@@ -1,0 +1,102 @@
+package run.simple.feature_training_screen.ui.components.intervalList
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import run.simple.core.theme.DemoColors
+import run.simple.feature_training_screen.ui.components.intervalItem.IntervalItemState
+import run.simple.feature_training_screen.ui.components.intervalItem.IntervalItemView
+import run.simple.feature_training_screen.ui.components.intervalItem.TrainingState
+
+@Immutable
+data class IntervalListState(
+    val items: ImmutableList<IntervalItemState>,
+    val progress: String,
+)
+
+@Composable
+fun IntervalList(state: IntervalListState) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+        ) {
+            Text(
+                text = "Интервалы",
+                modifier = Modifier.weight(1f),
+                color = DemoColors.Black,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = state.progress,
+                color = DemoColors.TextGray,
+            )
+
+        }
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            itemsIndexed(state.items, key = { index, _ -> index }) { _, item ->
+                IntervalItemView(state = item)
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF5F5F5, widthDp = 360)
+@Composable
+private fun IntervalItemViewPreview() {
+    MaterialTheme {
+        IntervalList(
+            state = IntervalListState(
+                items = persistentListOf(
+                    IntervalItemState(
+                        trainingState = TrainingState.Idle,
+                        order = "1",
+                        title = "Ходьба в среднем темпе",
+                        left = "5:00"
+                    ),
+
+                    IntervalItemState(
+                        trainingState = TrainingState.Running(0.5f),
+                        order = "1",
+                        title = "Ходьба в среднем темпе",
+                        left = "5:00"
+                    ),
+
+                    IntervalItemState(
+                        trainingState = TrainingState.Pause(0.75f),
+                        order = "1",
+                        title = "Ходьба в среднем темпе",
+                        left = "5:00"
+                    ),
+
+                    IntervalItemState(
+                        trainingState = TrainingState.Completed,
+                        order = "1",
+                        title = "Ходьба в среднем темпе",
+                        left = "5:00"
+                    ),
+                ),
+                progress = "7 из 7 ✓"
+            )
+        )
+    }
+}

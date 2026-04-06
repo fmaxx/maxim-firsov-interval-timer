@@ -37,14 +37,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-private val Green500 = Color(0xFF4CAF50)
-private val BorderGray = Color(0xFFE5E7EB)
-private val TextGray = Color(0xFF939BAA)
-private val GreenFill = Color(0xFFBFE4C4)
-private val Orange = Color(0xFFE8883A)
-private val OrangeFill = Color(0xFFFBE9D7)
-private val Black = Color(0xFF1A1D24)
+import run.simple.core.theme.DemoColors
+import run.simple.core.theme.DemoColors.Black
+import run.simple.core.theme.DemoColors.Green500
+import run.simple.core.theme.DemoColors.GreenFill
+import run.simple.core.theme.DemoColors.Orange
+import run.simple.core.theme.DemoColors.OrangeFill
+import run.simple.core.theme.DemoColors.TextGray
 
 @Composable
 fun IntervalItemView(
@@ -241,17 +240,13 @@ private fun IntervalItemViewPreview() {
                     left = "5:00"
                 )
             )
-//            IntervalItem(index = 1, title = "Ходьба в среднем темпе", timeSeconds = 300)
-//            IntervalItem(index = 2, title = "Ходьба в интенсивном темпе", timeSeconds = 300)
-//            IntervalItem(index = 3, title = "Ходьба в среднем темпе", timeSeconds = 120)
-//            IntervalItem(index = 4, title = "Медленный бег", timeSeconds = 30)
         }
     }
 }
 
 private fun IntervalItemState.borderColor(): Color = when (trainingState) {
     TrainingState.Completed -> Color.Transparent
-    TrainingState.Idle -> Green500
-    is TrainingState.Pause -> Orange
-    is TrainingState.Running -> Green500
+    TrainingState.Idle -> DemoColors.Green500
+    is TrainingState.Pause -> DemoColors.Orange
+    is TrainingState.Running -> DemoColors.Green500
 }

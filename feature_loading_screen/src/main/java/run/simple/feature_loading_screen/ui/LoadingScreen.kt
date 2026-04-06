@@ -43,11 +43,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import run.simple.core.theme.DemoColors.GrayBackground
+import run.simple.core.theme.DemoColors.Green500
 import run.simple.feature_loading_screen.ui.components.LoadButton
 import run.simple.feature_loading_screen.ui.components.LoadButtonState
 
-private val Green500 = Color(0xFF4CAF50)
-val GrayBackground = Color(0xFFF5F5F7)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

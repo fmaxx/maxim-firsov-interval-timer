@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
 
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui.graphics)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
