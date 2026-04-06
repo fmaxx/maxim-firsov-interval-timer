@@ -29,7 +29,7 @@ data class TrainingUiState(
 @Immutable
 data class TopbarState(
     val title: String = "",
-    val totaLeftTime: String = "00:00",
+    val status: String = "00:00",
     val trainingState: TrainingState = TrainingState.Idle,
 ) {
 
@@ -37,7 +37,7 @@ data class TopbarState(
 
         val default = TopbarState(
             title = "",
-            totaLeftTime = "",
+            status = "",
             trainingState = TrainingState.Idle,
         )
     }

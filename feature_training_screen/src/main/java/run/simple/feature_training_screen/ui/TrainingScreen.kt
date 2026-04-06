@@ -2,7 +2,6 @@ package run.simple.feature_training_screen.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +13,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,7 +22,6 @@ import androidx.compose.runtime.referentialEqualityPolicy
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,7 +49,6 @@ import run.simple.feature_training_screen.ui.components.trainingCard.TrainingCar
 fun TrainingScreen(
     route: TrainingRoute,
     viewModel: TrainingViewModel = koinViewModel(),
-    onBackClick: () -> Unit = {},
 ) {
     LaunchedEffect(route) {
         viewModel.setData(route.data)
@@ -62,7 +58,6 @@ fun TrainingScreen(
     Content(
         state = state,
         onAction = viewModel::onAction,
-        onBackClick = onBackClick,
     )
     EffectHandler(effectFlow = viewModel.effect)
 }
@@ -72,7 +67,6 @@ fun TrainingScreen(
 private fun Content(
     state: TrainingUiState,
     onAction: (TrainingUiAction) -> Unit = {},
-    onBackClick: () -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -86,7 +80,9 @@ private fun Content(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = {
+                        onAction.invoke(TrainingUiAction.OnBackClick)
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Назад",
@@ -102,7 +98,7 @@ private fun Content(
                     }
 
                     Text(
-                        text = state.topBarState.totaLeftTime,
+                        text = state.topBarState.status,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 18.sp,
                         color = color
@@ -162,7 +158,10 @@ private fun Content(
                         bottom.linkTo(parent.bottom)
                     }
             ) {
-                ButtonsView(state.buttonsState)
+                ButtonsView(
+                    state = state.buttonsState,
+                    onAction = onAction
+                )
             }
         }
     }
@@ -218,7 +217,7 @@ private fun RunningPreview() {
         state = TrainingUiState(
             topBarState = TopbarState(
                 trainingState = TrainingState.Running(0.5f),
-                totaLeftTime = "● 12:18",
+                status = "● 12:18",
                 title = "Tренировка 7",
             ),
             buttonsState = ButtonsState(

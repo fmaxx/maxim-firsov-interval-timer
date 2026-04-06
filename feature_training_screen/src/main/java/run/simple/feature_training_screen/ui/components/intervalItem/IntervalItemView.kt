@@ -245,8 +245,8 @@ private fun IntervalItemViewPreview() {
 }
 
 private fun IntervalItemState.borderColor(): Color = when (trainingState) {
+    TrainingState.Idle -> Color.Transparent
+    is TrainingState.Running -> Green500
+    is TrainingState.Pause -> Orange
     TrainingState.Completed -> Color.Transparent
-    TrainingState.Idle -> DemoColors.Green500
-    is TrainingState.Pause -> DemoColors.Orange
-    is TrainingState.Running -> DemoColors.Green500
 }

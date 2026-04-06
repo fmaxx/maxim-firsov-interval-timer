@@ -75,21 +75,21 @@ private fun IntervalsItemViewPreview() {
 
                     IntervalItemState(
                         trainingState = TrainingState.Running(0.5f),
-                        order = "1",
+                        order = "2",
                         title = "Ходьба в среднем темпе",
                         left = "5:00"
                     ),
 
                     IntervalItemState(
                         trainingState = TrainingState.Pause(0.75f),
-                        order = "1",
+                        order = "3",
                         title = "Ходьба в среднем темпе",
                         left = "5:00"
                     ),
 
                     IntervalItemState(
                         trainingState = TrainingState.Completed,
-                        order = "1",
+                        order = "4",
                         title = "Ходьба в среднем темпе",
                         left = "5:00"
                     ),

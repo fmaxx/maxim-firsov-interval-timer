@@ -63,7 +63,7 @@ fun TrainingCard(
             Text(
                 text = state.status,
                 color = state.statusColor(),
-                fontSize = 12.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 1.5.sp,
                 textAlign = TextAlign.Center
@@ -146,8 +146,8 @@ private fun TrainingCardState.statusColor(): Color = when (trainingState) {
 }
 
 private fun TrainingCardState.titleColor(): Color = when (trainingState) {
-    TrainingState.Idle -> DemoColors.TextGray
-    is TrainingState.Running -> DemoColors.TextGray
+    TrainingState.Idle -> DemoColors.Black
+    is TrainingState.Running -> DemoColors.Black
     is TrainingState.Pause -> DemoColors.Orange
     TrainingState.Completed -> DemoColors.Blue
 }
