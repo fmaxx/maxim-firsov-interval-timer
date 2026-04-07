@@ -75,7 +75,7 @@ class TrainingViewModel(
 
     fun setData(data: TrainingResponse) {
         stopTimer()
-        model.data = data.tiny()
+        model.data = data
         updateUI()
     }
 
