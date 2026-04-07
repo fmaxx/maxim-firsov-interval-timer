@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,7 +28,6 @@ import run.simple.feature_training_screen.sound.TrainingServiceCommand
 import run.simple.feature_training_screen.sound.TrainingServiceInteractor
 import run.simple.feature_training_screen.ui.components.intervalItem.TrainingState
 import run.simple.repository_api.data.TrainingResponse
-import timber.log.Timber
 
 class TrainingViewModel(
     private val mapper: TrainingMapper,
