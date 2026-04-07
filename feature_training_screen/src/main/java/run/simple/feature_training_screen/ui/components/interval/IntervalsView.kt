@@ -7,14 +7,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 import run.simple.core.theme.DemoColors
 import run.simple.feature_training_screen.ui.IntervalsViewState
 import run.simple.feature_training_screen.ui.components.intervalItem.IntervalItemState
@@ -46,7 +50,18 @@ fun IntervalsView(
             )
 
         }
+        val listState = rememberLazyListState()
+        val activeIndex = state.items.indexOfFirst {
+            it.trainingState is TrainingState.Running
+        }
+        LaunchedEffect(activeIndex) {
+            if (activeIndex >= 0) {
+                listState.animateScrollToItem(activeIndex)
+            }
+        }
+
         LazyColumn(
+            state = listState,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             itemsIndexed(

@@ -14,13 +14,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import run.simple.core.navigation.Navigator
+import run.simple.feature_training_screen.data.TrainingIntervalWithTimings
 import run.simple.feature_training_screen.data.TrainingModel
 import run.simple.feature_training_screen.domain.TrainingMapper
+import run.simple.feature_training_screen.sound.TimerSoundPlayer
+import run.simple.feature_training_screen.ui.components.intervalItem.TrainingState
 import run.simple.repository_api.data.TrainingResponse
+import timber.log.Timber
 
 class TrainingViewModel(
     private val mapper: TrainingMapper,
     private val navigator: Navigator,
+    private val player: TimerSoundPlayer,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TrainingUiState.default)
@@ -54,10 +59,10 @@ class TrainingViewModel(
             }
 
             TrainingUiAction.OnStartClick -> {
+                player.playStart()
                 model.start()
                 updateUI()
                 startTimer()
-
             }
 
             TrainingUiAction.OnPauseClick -> {
@@ -89,11 +94,32 @@ class TrainingViewModel(
         stopTimer()
         tickerJob = viewModelScope.launch {
             while (isActive && model.currentProgress < 1f) {
+                val intervalBefore = model.currentInterval
                 val current = currentTimeMillis()
                 delay(TIMER_PERIOD_MS)
                 model.increment(passedMs = currentTimeMillis() - current)
+                checkIntervals(
+                    before = intervalBefore,
+                    after = model.currentInterval
+                )
                 updateUI()
+            }
+        }
+    }
 
+    private fun checkIntervals(
+        before: TrainingIntervalWithTimings?,
+        after: TrainingIntervalWithTimings?,
+    ) {
+        if (before != after) {
+            if (model.trainingState == TrainingState.Completed) {
+                Timber.d("~~~ [SOUND] finish")
+                // тренировка окончена
+                player.playFinish()
+            } else {
+                Timber.d("~~~ [SOUND] transition")
+                // переключился интервал
+                player.playTransition()
             }
         }
     }
@@ -107,6 +133,7 @@ class TrainingViewModel(
 
     override fun onCleared() {
         stopTimer()
+        player.release()
         super.onCleared()
     }
 
