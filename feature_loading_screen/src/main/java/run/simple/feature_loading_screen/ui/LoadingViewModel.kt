@@ -51,8 +51,8 @@ class LoadingViewModel(
             when (val result = trainingRepository.fetchTraining(id = trainingId)) {
                 is FetchTrainingResult.Success -> {
                     Timber.d("success: ${result.response}")
-                    _uiState.update { it.copy(isLoading = false, isError = false) }
                     navigator.goTo(TrainingRoute(result.response))
+                    _uiState.update { it.copy(isLoading = false, isError = false) }
                 }
 
                 is FetchTrainingResult.Fail -> {

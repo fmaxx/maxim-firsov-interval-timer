@@ -1,6 +1,8 @@
 package run.simple.feature_loading_screen.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -43,11 +45,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import run.simple.core.theme.DemoColors
 import run.simple.core.theme.DemoColors.GrayBackground
 import run.simple.core.theme.DemoColors.Green500
 import run.simple.feature_loading_screen.ui.components.LoadButton
 import run.simple.feature_loading_screen.ui.components.LoadButtonState
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -157,6 +159,21 @@ private fun Content(
                 }
             )
         }
+
+        // на время загрузки блокируем клики
+        if (state.isLoading) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(DemoColors.BorderGray.copy(alpha = 0.5f))
+                    .clickable(onClick = {})
+                    .padding(paddingValues),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+
+            }
+        }
     }
 }
 
@@ -217,6 +234,16 @@ private fun LoadingScreenPreview() {
     Content(
         state = LoadingUiState(
             isLoading = false
+        )
+    )
+}
+
+@Preview
+@Composable
+private fun LoadingScreenIsLoadingPreview() {
+    Content(
+        state = LoadingUiState(
+            isLoading = true
         )
     )
 }

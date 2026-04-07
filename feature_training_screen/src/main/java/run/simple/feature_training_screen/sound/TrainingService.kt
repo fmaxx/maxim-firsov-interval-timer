@@ -35,7 +35,6 @@ class TrainingService : TrainingServiceInteractor, Service() {
     }
 
     init {
-        Timber.d("~~~ init")
         player.prefetch()
     }
 

@@ -14,7 +14,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import run.simple.feature_training_screen.R
-import timber.log.Timber
 import kotlin.coroutines.resume
 
 /**
@@ -65,13 +64,11 @@ class TimerSoundPlayer(context: Context) {
     }
 
     fun playStart() = playWithFocus {
-        Timber.d("~~~ playStart")
-        playSafe(startId)
+        play(startId)
     }
 
     fun playTransition() = playWithFocus {
-        Timber.d("~~~ playTransition")
-        playSafe(transitionId)
+        play(transitionId)
     }
 
     fun playFinish() {
@@ -79,7 +76,7 @@ class TimerSoundPlayer(context: Context) {
             val granted = requestFocus()
             if (!granted) return@launch
             try {
-                playSafe(finishId)
+                play(finishId)
                 delay(5_000)
             } finally {
                 abandonFocus()
@@ -87,7 +84,7 @@ class TimerSoundPlayer(context: Context) {
         }
     }
 
-    private fun playSafe(soundId: Int) {
+    private fun play(soundId: Int) {
         soundPool.play(soundId, 1f, 1f, 1, 0, 1f)
     }
 
@@ -143,11 +140,13 @@ class TimerSoundPlayer(context: Context) {
     }
 }
 
+/**
+ * Загружаем асинхронно ресурс
+ * */
 private suspend fun SoundPool.loadAndAwait(context: Context, @RawRes resId: Int): Int =
     suspendCancellableCoroutine { cont ->
         val id = load(context, resId, 1)
         setOnLoadCompleteListener { _, sampleId, status ->
-            Timber.d("~~~ loaded $sampleId with status=$status")
             if (sampleId == id) {
                 if (status == 0) cont.resume(id)
                 else cont.resume(-1)

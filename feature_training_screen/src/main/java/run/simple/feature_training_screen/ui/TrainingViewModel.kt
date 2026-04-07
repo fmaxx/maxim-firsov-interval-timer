@@ -55,7 +55,6 @@ class TrainingViewModel(
     // Коннектор для работы с сервисом
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-            Timber.d("~~~ onServiceConnected")
             val localBinder = binder as? TrainingService.TrainingServiceBinder ?: return
             serviceInteractor = localBinder.getService()
             isBound = true
@@ -66,7 +65,6 @@ class TrainingViewModel(
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            Timber.d("~~~ onServiceDisconnected")
             serviceInteractor = null
             isBound = false
         }
@@ -166,14 +164,10 @@ class TrainingViewModel(
     ) {
         if (before != after) {
             if (model.trainingState == TrainingState.Completed) {
-                Timber.d("~~~ [SOUND] finish")
                 // тренировка окончена
-//                player.playFinish()
                 serviceInteractor?.run(TrainingServiceCommand.PlayFinish)
             } else {
-                Timber.d("~~~ [SOUND] transition")
                 // переключился интервал
-//                player.playTransition()
                 serviceInteractor?.run(TrainingServiceCommand.PlayInterval)
             }
         }
