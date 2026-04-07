@@ -1,5 +1,12 @@
 package run.simple.feature_training_screen.ui
 
+import android.app.Application
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +24,9 @@ import run.simple.core.navigation.Navigator
 import run.simple.feature_training_screen.data.TrainingIntervalWithTimings
 import run.simple.feature_training_screen.data.TrainingModel
 import run.simple.feature_training_screen.domain.TrainingMapper
-import run.simple.feature_training_screen.sound.TimerSoundPlayer
+import run.simple.feature_training_screen.sound.TrainingService
+import run.simple.feature_training_screen.sound.TrainingServiceCommand
+import run.simple.feature_training_screen.sound.TrainingServiceInteractor
 import run.simple.feature_training_screen.ui.components.intervalItem.TrainingState
 import run.simple.repository_api.data.TrainingResponse
 import timber.log.Timber
@@ -25,8 +34,8 @@ import timber.log.Timber
 class TrainingViewModel(
     private val mapper: TrainingMapper,
     private val navigator: Navigator,
-    private val player: TimerSoundPlayer,
-) : ViewModel() {
+    application: Application,
+) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(TrainingUiState.default)
     val uiState: StateFlow<TrainingUiState> = _uiState.asStateFlow()
@@ -38,10 +47,54 @@ class TrainingViewModel(
     private var tickerJob: Job? = null
     private val model = TrainingModel()
 
+    // Training Service
+    private var serviceInteractor: TrainingServiceInteractor? = null
+    private var isBound = false
+    private var pendingStartSound = false
+
+    // Коннектор для работы с сервисом
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+            Timber.d("~~~ onServiceConnected")
+            val localBinder = binder as? TrainingService.TrainingServiceBinder ?: return
+            serviceInteractor = localBinder.getService()
+            isBound = true
+            if (pendingStartSound) {
+                pendingStartSound = false
+                serviceInteractor?.run(TrainingServiceCommand.PlayStart)
+            }
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            Timber.d("~~~ onServiceDisconnected")
+            serviceInteractor = null
+            isBound = false
+        }
+    }
+
+    init {
+        TrainingService.start(getApplication())
+        bindService()
+    }
+
     fun setData(data: TrainingResponse) {
         stopTimer()
         model.data = data.tiny()
         updateUI()
+    }
+
+    private fun bindService() {
+        if (isBound) return
+        val context = getApplication<Application>()
+        val intent = Intent(context, TrainingService::class.java)
+        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    private fun unbindService() {
+        if (!isBound) return
+        getApplication<Application>().unbindService(serviceConnection)
+        serviceInteractor = null
+        isBound = false
     }
 
     private fun updateUI() {
@@ -59,7 +112,7 @@ class TrainingViewModel(
             }
 
             TrainingUiAction.OnStartClick -> {
-                player.playStart()
+                serviceInteractor?.run(TrainingServiceCommand.PlayStart)
                 model.start()
                 updateUI()
                 startTimer()
@@ -115,11 +168,13 @@ class TrainingViewModel(
             if (model.trainingState == TrainingState.Completed) {
                 Timber.d("~~~ [SOUND] finish")
                 // тренировка окончена
-                player.playFinish()
+//                player.playFinish()
+                serviceInteractor?.run(TrainingServiceCommand.PlayFinish)
             } else {
                 Timber.d("~~~ [SOUND] transition")
                 // переключился интервал
-                player.playTransition()
+//                player.playTransition()
+                serviceInteractor?.run(TrainingServiceCommand.PlayInterval)
             }
         }
     }
@@ -133,7 +188,8 @@ class TrainingViewModel(
 
     override fun onCleared() {
         stopTimer()
-        player.release()
+        unbindService()
+        TrainingService.stop(getApplication())
         super.onCleared()
     }
 

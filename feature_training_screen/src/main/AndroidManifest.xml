@@ -3,7 +3,7 @@
 
     <application>
         <service
-            android:name=".sound.TimerService"
+            android:name=".sound.TrainingService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
     </application>

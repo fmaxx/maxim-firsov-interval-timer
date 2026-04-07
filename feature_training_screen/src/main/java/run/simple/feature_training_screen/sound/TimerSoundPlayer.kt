@@ -5,14 +5,17 @@ import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.SoundPool
-import android.os.Build
+import androidx.annotation.RawRes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import run.simple.feature_training_screen.R
+import timber.log.Timber
+import kotlin.coroutines.resume
 
 /**
  * Проигрывает короткие сигналы интервального таймера, корректно сосуществуя
@@ -43,30 +46,49 @@ class TimerSoundPlayer(context: Context) {
         .setAudioAttributes(audioAttributes)
         .build()
 
+    private val loadedSounds = mutableSetOf<Int>()
+
     private val startId: Int = soundPool.load(appContext, R.raw.beep_start, 1)
     private val transitionId: Int = soundPool.load(appContext, R.raw.beep_transition, 1)
     private val finishId: Int = soundPool.load(appContext, R.raw.beep_finish, 1)
-
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     // Текущий focus-запрос
     private var focusRequest: AudioFocusRequest? = null
 
-    fun playStart() = playWithFocus { soundPool.play(startId, 1f, 1f, 1, 0, 1f) }
+    fun prefetch() {
+        scope.launch(Dispatchers.IO) {
+            soundPool.loadAndAwait(appContext, R.raw.beep_start)
+            soundPool.loadAndAwait(appContext, R.raw.beep_transition)
+            soundPool.loadAndAwait(appContext, R.raw.beep_finish)
+        }
+    }
 
-    fun playTransition() = playWithFocus { soundPool.play(transitionId, 1f, 1f, 1, 0, 1f) }
+    fun playStart() = playWithFocus {
+        Timber.d("~~~ playStart")
+        playSafe(startId)
+    }
+
+    fun playTransition() = playWithFocus {
+        Timber.d("~~~ playTransition")
+        playSafe(transitionId)
+    }
 
     fun playFinish() {
         scope.launch {
             val granted = requestFocus()
             if (!granted) return@launch
             try {
-                soundPool.play(finishId, 1f, 1f, 1, 0, 1f)
-                delay(4_000)
+                playSafe(finishId)
+                delay(5_000)
             } finally {
                 abandonFocus()
             }
         }
+    }
+
+    private fun playSafe(soundId: Int) {
+        soundPool.play(soundId, 1f, 1f, 1, 0, 1f)
     }
 
     /**
@@ -120,3 +142,15 @@ class TimerSoundPlayer(context: Context) {
         soundPool.release()
     }
 }
+
+private suspend fun SoundPool.loadAndAwait(context: Context, @RawRes resId: Int): Int =
+    suspendCancellableCoroutine { cont ->
+        val id = load(context, resId, 1)
+        setOnLoadCompleteListener { _, sampleId, status ->
+            Timber.d("~~~ loaded $sampleId with status=$status")
+            if (sampleId == id) {
+                if (status == 0) cont.resume(id)
+                else cont.resume(-1)
+            }
+        }
+    }
