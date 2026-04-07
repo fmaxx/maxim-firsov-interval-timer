@@ -60,75 +60,100 @@ fun TrainingCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // --- Статус сверху ---
-            Text(
-                text = state.status,
-                color = state.statusColor(),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 1.5.sp,
-                textAlign = TextAlign.Center
-            )
+            StatusText(state)
 
             Spacer(Modifier.height(6.dp))
 
             // --- Название текущего интервала ---
-            Text(
-                text = state.trainingName,
-                color = state.titleColor(),
-                fontSize = 17.sp,
-                fontWeight = FontWeight.Medium,
-                textAlign = TextAlign.Center
-            )
+            IntervalText(state)
 
             Spacer(Modifier.height(12.dp))
 
             // --- Большое время ---
-            Text(
-                text = state.currentTimeLeft,
-                color = DemoColors.Black,
-                fontSize = 72.sp,
-                fontWeight = FontWeight.Black,
-                textAlign = TextAlign.Center
-            )
+            TimeText(state)
 
             Spacer(Modifier.height(8.dp))
 
             // --- Подпись под временем ---
-            Text(
-                text = state.totalProgressMessage,
-                color = DemoColors.TextGray,
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.SemiBold
-            )
+            DescriptionText(state)
 
             Spacer(Modifier.height(16.dp))
 
             // --- Прогресс-бар ---
-            val animatedProgress by animateFloatAsState(
-                targetValue = state.totalProgress.coerceIn(0f, 1f),
-                animationSpec = tween(durationMillis = 300),
-                label = "timer-progress"
-            )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(4.dp)
-                    .clip(RoundedCornerShape(2.dp))
-                    .background(DemoColors.BorderGray)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(animatedProgress)
-                        .background(state.progressColor())
-                )
-            }
+            TrainingProgress(state)
 
             Spacer(modifier = Modifier.height(4.dp))
         }
     }
+}
+
+@Composable
+private fun TrainingProgress(state: TrainingCardState) {
+    val animatedProgress by animateFloatAsState(
+        targetValue = state.totalProgress.coerceIn(0f, 1f),
+        animationSpec = tween(durationMillis = 300),
+        label = "timer-progress"
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(4.dp)
+            .clip(RoundedCornerShape(2.dp))
+            .background(DemoColors.BorderGray)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(animatedProgress)
+                .background(state.progressColor())
+        )
+    }
+}
+
+@Composable
+private fun DescriptionText(state: TrainingCardState) {
+    Text(
+        text = state.totalProgressMessage,
+        color = DemoColors.TextGray,
+        fontSize = 14.sp,
+        textAlign = TextAlign.Center,
+        fontWeight = FontWeight.SemiBold
+    )
+}
+
+@Composable
+private fun TimeText(state: TrainingCardState) {
+    Text(
+        text = state.currentTimeLeft,
+        color = DemoColors.Black,
+        fontSize = 72.sp,
+        fontWeight = FontWeight.Black,
+        textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+private fun IntervalText(state: TrainingCardState) {
+    Text(
+        text = state.trainingName,
+        color = state.titleColor(),
+        fontSize = 17.sp,
+        fontWeight = FontWeight.Medium,
+        textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+private fun StatusText(state: TrainingCardState) {
+    Text(
+        text = state.status,
+        color = state.statusColor(),
+        fontSize = 16.sp,
+        fontWeight = FontWeight.SemiBold,
+        letterSpacing = 1.5.sp,
+        textAlign = TextAlign.Center
+    )
 }
 
 private fun TrainingCardState.borderColor(): Color = when (trainingState) {

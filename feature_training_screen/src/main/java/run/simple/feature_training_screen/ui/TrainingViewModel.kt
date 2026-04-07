@@ -15,13 +15,10 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import run.simple.core.navigation.Navigator
 import run.simple.feature_training_screen.data.TrainingModel
-import run.simple.feature_training_screen.domain.TrainingInteractor
 import run.simple.feature_training_screen.domain.TrainingMapper
-import run.simple.feature_training_screen.ui.components.intervalItem.TrainingState
 import run.simple.repository_api.data.TrainingResponse
 
 class TrainingViewModel(
-    private val trainingInteractor: TrainingInteractor,
     private val mapper: TrainingMapper,
     private val navigator: Navigator,
 ) : ViewModel() {
@@ -82,6 +79,7 @@ class TrainingViewModel(
             }
 
             TrainingUiAction.OnNewClick -> {
+                stopTimer()
                 navigator.goBack()
             }
         }

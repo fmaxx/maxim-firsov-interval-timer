@@ -113,12 +113,6 @@ class TrainingMapper {
                     is TrainingState.Pause -> TrainingState.Pause(localProgress)
                     is TrainingState.Running -> TrainingState.Running(localProgress)
                 }
-               /* if (globalTrainingState is TrainingState.Pause) {
-                    TrainingState.Pause(localProgress)
-                } else {
-
-                    TrainingState.Running(localProgress)
-                }*/
             } else {
                 val isPassed = globalPosition > item.endTimeSec
                 if (isPassed) {

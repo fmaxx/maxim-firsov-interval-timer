@@ -193,23 +193,6 @@ private fun EffectHandler(effectFlow: Flow<TrainingUiEffect>) {
     }
 }
 
-/*@Preview
-@Composable
-private fun IdlePreview() {
-    Content(
-        state = TrainingUiState(
-            topBarState = TopbarState(
-                trainingState = TrainingState.Idle,
-                totaLeftTime = "15:00",
-                title = "Tренировка 7",
-            ),
-            buttonsState = ButtonsState(
-                trainingState = TrainingState.Idle
-            )
-        ),
-    )
-}*/
-
 @Preview
 @Composable
 private fun RunningPreview() {
@@ -286,37 +269,3 @@ private fun RunningPreview() {
         ),
     )
 }
-
-/*@Preview
-@Composable
-private fun PausePreview() {
-    Content(
-        state = TrainingUiState(
-            topBarState = TopbarState(
-                trainingState = TrainingState.Pause(0.5f),
-                totaLeftTime = "❚❚ Пауза",
-                title = "Tренировка 7",
-            ),
-            buttonsState = ButtonsState(
-                trainingState = TrainingState.Pause(0.5f)
-            )
-        ),
-    )
-}
-
-@Preview
-@Composable
-private fun CompletePreview() {
-    Content(
-        state = TrainingUiState(
-            topBarState = TopbarState(
-                trainingState = TrainingState.Completed,
-                totaLeftTime = "Завершена",
-                title = "Tренировка 7",
-            ),
-            buttonsState = ButtonsState(
-                trainingState = TrainingState.Completed
-            )
-        ),
-    )
-}*/
